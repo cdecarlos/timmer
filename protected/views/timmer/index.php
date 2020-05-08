@@ -17,8 +17,8 @@ else: ?>
 <?php endif; ?>
 
 <?php
-foreach ($blocks as $day => $blockArray) {
-  echo '<p class="mt20">' . $day . '</p>';
+foreach ($blocks as $d => $blockArray) {
+  echo '<p class="mt20">' . $d . '</p>';
   foreach ($blockArray as $b) {
     $this->renderPartial ('_listItem', [
       'item' => $b
