@@ -1,0 +1,72 @@
+@import '_margin';
+@import '_variables';
+
+body {
+  padding-bottom: 100px;
+}
+
+.border {
+  border: 1px solid #ccc;
+}
+.timmerItem {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+.btnAdd,
+.btnMove {
+  font-size: 22px;
+  background: $green;
+  display: block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  color: white;
+  line-height: 50px;
+  border-radius: 50%;
+  margin: 10px auto;
+  &:hover {
+    color: white;
+    background: $greenHover;
+  }
+}
+.btnMove {
+  background: $blue;
+  font-size: 17px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  display: inline-block;
+}
+
+.btnStop {
+  font-size: 22px;
+  background: $orange;
+  display: block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  color: white;
+  line-height: 50px;
+  border-radius: 50%;
+  margin: 10px;
+  &:hover {
+    color: white;
+    background: $orangeHover;
+  }
+}
+
+.day {
+  padding: 15px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #ccc;
+  background-color: white;
+  .progress {
+    height: 20px;
+  }
+  h3 {
+    display: inline-block;
+  }
+}
