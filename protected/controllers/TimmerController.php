@@ -23,7 +23,7 @@ class TimmerController extends Controller {
     $criteria = new CDbCriteria;
     $criteria->addCondition ('idUser = ' . Yii::app()->user->id);
 		$criteria->order = 'timeInit DESC';
-		// $criteria->limit = 25;
+		$criteria->limit = 100;
 		$blocksModel = Blocks::model()->findAll($criteria);
 
 		$blocks = [];
@@ -36,8 +36,11 @@ class TimmerController extends Controller {
 					'items' => [],
 				];
 			}
-			if ($b->timeEnd != null)
+			if ($b->timeEnd != null) {
 				$blocks[$index]['hours']+= $b->timeEnd - $b->timeInit;
+			} else {
+				$blocks[$index]['hours']+= time() - $b->timeInit;
+			}
 			$blocks[$index]['items'][] = $b;
 		}
 
