@@ -23,14 +23,22 @@ class TimmerController extends Controller {
     $criteria = new CDbCriteria;
     $criteria->addCondition ('idUser = ' . Yii::app()->user->id);
 		$criteria->order = 'timeInit DESC';
-		$criteria->limit = 25;
+		// $criteria->limit = 25;
 		$blocksModel = Blocks::model()->findAll($criteria);
 
 		$blocks = [];
 		foreach ($blocksModel as $b) {
-			if (!isset ($blocks[$b->day]))
-				$blocks[$b->day] = [];
-			$blocks[$b->day][] = $b;
+			$index = strtotime($b->day);
+			if (!isset ($blocks[$index])) {
+				$blocks[$index] = [
+					'date' => $b->day,
+					'hours' => 0,
+					'items' => [],
+				];
+			}
+			if ($b->timeEnd != null)
+				$blocks[$index]['hours']+= $b->timeEnd - $b->timeInit;
+			$blocks[$index]['items'][] = $b;
 		}
 
 		$criteria = new CDbCriteria;
