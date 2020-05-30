@@ -23,14 +23,25 @@ class TimmerController extends Controller {
     $criteria = new CDbCriteria;
     $criteria->addCondition ('idUser = ' . Yii::app()->user->id);
 		$criteria->order = 'timeInit DESC';
-		$criteria->limit = 25;
+		$criteria->limit = 100;
 		$blocksModel = Blocks::model()->findAll($criteria);
 
 		$blocks = [];
 		foreach ($blocksModel as $b) {
-			if (!isset ($blocks[$b->day]))
-				$blocks[$b->day] = [];
-			$blocks[$b->day][] = $b;
+			$index = strtotime($b->day);
+			if (!isset ($blocks[$index])) {
+				$blocks[$index] = [
+					'date' => $b->day,
+					'hours' => 0,
+					'items' => [],
+				];
+			}
+			if ($b->timeEnd != null) {
+				$blocks[$index]['hours']+= $b->timeEnd - $b->timeInit;
+			} else {
+				$blocks[$index]['hours']+= time() - $b->timeInit;
+			}
+			$blocks[$index]['items'][] = $b;
 		}
 
 		$criteria = new CDbCriteria;
@@ -161,5 +172,45 @@ class TimmerController extends Controller {
 		}
 		echo $res;
 		die;
+	}
+
+	public function actionPlay ($id = null) {
+		$model = new Blocks;
+		$model->day = date('Y-m-d');
+		$model->timeInit = date('Y-m-d\TH:i', time());
+
+		if ($id != null) {
+			$reload = Blocks::model()->findByPk($id);
+			if ($reload != null) {
+				$model->title = $reload->title;
+				$model->idProject = $reload->idProject;
+			}
+		}
+
+		if (isset ($_POST['Blocks'])) {
+			$model->attributes = $_POST['Blocks'];
+			$model->idUser = Yii::app()->user->id;
+
+			// If received empty set last value
+			if ($model->timeInit == '') {
+				$model->timeInit = time();
+			} else {
+				$model->timeInit = strtotime($model->timeInit);
+			}
+
+			// If received empty set null
+			if ($model->timeEnd == '') {
+				$model->timeEnd = null;
+			} else {
+				$model->timeEnd = strtotime($model->timeEnd);
+			}
+
+			if ($model->save())
+				$this->redirect (['timmer/index']);
+		}
+
+		$this->render('add', [
+			'model' => $model
+		]);
 	}
 }
