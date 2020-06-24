@@ -122,4 +122,21 @@ class Projects extends CActiveRecord
 			Projects::STATUS_DELETED => 'Deleted'
 		];
 	}
+
+	public function getTotalHours () {
+		$total = 0;
+
+		$criteria = new CDbCriteria;
+    $criteria->addCondition ('idUser = ' . Yii::app()->user->id);
+    $criteria->addCondition ('idProject = ' . $this->id);
+		$blocks = Blocks::model()->findAll($criteria);
+
+		foreach ($blocks as $i => $b) {
+			$total+= $b->timeEnd - $b->timeInit;
+		}
+
+		$total = Blocks::formatSeconds ($total);
+
+		return $total;
+	}
 }
