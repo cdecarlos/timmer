@@ -67,4 +67,12 @@ class ProjectController extends Controller {
 			'model' => $model
 		]);
 	}
+
+	public function actionView ($id) {
+		$model = Projects::model()->findByPk($id);
+
+		$this->render('view', [
+			'model' => $model
+		]);
+	}
 }
