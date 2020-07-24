@@ -43,6 +43,7 @@ class TimmerController extends Controller {
 			}
 			$blocks[$index]['items'][] = $b;
 		}
+		krsort($blocks);
 
 		$criteria = new CDbCriteria;
     $criteria->addCondition ('idUser = ' . Yii::app()->user->id);
